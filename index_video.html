@@ -1,0 +1,58 @@
+<html>
+<!--  https://stackoverflow.com/questions/18114349/html5-canvas-smooth-scroll-tilemap -->
+<head>
+    <script type="text/javascript">
+        window.onload=function() {
+            window.requestAnimationFrame = (function () {
+                return window.requestAnimationFrame ||
+                    window.webkitRequestAnimationFrame ||
+                    window.mozRequestAnimationFrame ||
+                    function (callback) {
+                        window.setTimeout(callback, 1000 / 60);
+                    };
+            })();
+            var canvas = document.getElementById("canvas");
+            var ctx = canvas.getContext('2d');
+            var size = 64;
+
+            function fillPattern(img, w, h) {
+
+                //draw once
+                ctx.drawImage(img, 0, 0, w, h);
+
+                while (w < canvas.width) {
+                    ctx.drawImage(canvas, w, 0);
+                    w *= 2;
+                }
+                while (h < canvas.height) {
+                    ctx.drawImage(canvas, 0, h);
+                    h *= 2;
+                }
+            }
+
+            function loop() {
+                if (video1) fillPattern(video1, size * 1.3, size);
+                requestAnimationFrame(loop);
+
+            }
+
+            change.onchange = function (e) {
+                size = this.value;
+            }
+            loop();
+        }
+    </script>
+</head>
+<body>
+<canvas id="canvas" width=500 height=400></canvas>
+<input id="change" type=range min=4 max=500 value=64/>
+<video id="video1" width="420" autoplay=true loop=true style="display:none;">
+    <source src="http://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+    <source src="http://www.w3schools.com/html/mov_bbb.ogg" type="video/ogg">
+    Your browser does not support HTML5 video.
+</video>
+</body>
+</html>
+
+
+<!-- USE CHROME TO SEE THE SLIDER AT THE BOTTOM -->

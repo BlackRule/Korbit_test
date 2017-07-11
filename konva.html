@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="./js/konva.min.js"></script>
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <meta charset="utf-8">
+    <title>Konva Zoom Image on Hover Demo</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #FFFFFF;
+        }
+    </style>
+</head>
+<body>
+<div id="container"></div>
+<div id="button"></div>
+<script>
+
+    $(document).ready(function () {
+        var resources = {
+            '0.png': {
+                width: 462,
+                height: 1152
+            }
+        };
+        var buttonsWidth = 20;
+        var viewPort = {
+            width: $(document).width(),
+            height: $(document).height()
+
+        };
+        var imageHeight;
+
+        var stage = new Konva.Stage({
+            container: 'container',
+            height: viewPort.height,
+            width: viewPort.width
+
+        });
+
+        var scaleBy = 2;
+
+        function wheelF(e){
+            e.preventDefault();
+            var oldScale = stage.scaleX();
+            var mousePointTo = {
+                x: stage.getPointerPosition().x / oldScale - stage.x() / oldScale,
+                y: stage.getPointerPosition().y / oldScale - stage.y() / oldScale,
+            };
+            var newScale = e.deltaY < 0 ? oldScale * scaleBy : oldScale / scaleBy;
+            stage.scale({ x: newScale, y: newScale });
+            var newPos = {
+                x: -(mousePointTo.x - stage.getPointerPosition().x / newScale) * newScale,
+                y: -(mousePointTo.y - stage.getPointerPosition().y / newScale) * newScale
+            };
+            stage.position(newPos);
+//            if(stage.getAbsoluteScale().x>3){
+//
+//            }
+            
+            stage.batchDraw();
+        }
+
+
+        var layer = new Konva.Layer();
+        stage.add(layer);
+        var imageObj = new Image();
+
+        imageObj.onload = function () {
+            var backgroundImage = new Konva.Image({
+                image: imageObj,
+                height: imageObj.height,
+                width: imageObj.width,
+                draggable: true
+            });
+
+            layer.add(backgroundImage);
+            layer.draw();
+
+            window.addEventListener('wheel', wheelF);
+        };
+        imageObj.src = 'images/0.png';
+
+//        .
+        var zoomLevel = 1.5;
+
+//         layer.on('mouseenter', function () {
+//         layer.scale({
+//         x: zoomLevel,
+//         y: zoomLevel
+//         });
+//         layer.draw();
+//         });
+//         layer.on('mousemove', function (e) {
+//         var pos = stage.getPointerPosition();
+//         layer.x(-(pos.x));
+//         layer.y(-(pos.y));
+//         layer.draw();
+//         });
+//         layer.on('mouseleave', function () {
+//         layer.x(0);
+//         layer.y(0);
+//         layer.scale({
+//         x: 1,
+//         y: 1
+//         });
+//         layer.draw();
+//         });
+    });
+</script>
+</body>
+</html>
