@@ -1,26 +1,22 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <script src="./js/konva.min.js"></script>
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <meta charset="utf-8">
+    <title>Konva based body map</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #FFFFFF;
+        }
+    </style>
+</head>
 <body>
-
-<p>Image to use:</p>
-<img src="images/L1.jpg" height="200" width="200" style="visibility: hidden"/>
-
-<p>Canvas:</p>
-<canvas id=myCanvas" width="240" height="297" style="border:1px solid #d3d3d3;">
-    Your browser does not support the HTML5 canvas tag.
-</canvas>
-
-<script>
-    window.onload = function() {
-        var c = document.getElementById("myCanvas");
-        var ctx = c.getContext("2d");
-        var img = document.getElementById("scream");
-        ctx.drawImage(img, 10, 10);
-    }
-</script>
-
-<p><strong>Note:</strong> The canvas tag is not supported in Internet
-    Explorer 8 and earlier versions.</p>
-
+<div id="container"></div>
+<div id="button"></div>
+<script src="js/core.js"></script>
 </body>
 </html>

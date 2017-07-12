@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="js/konva.min.js"></script>
+    <script src="https://cdn.rawgit.com/konvajs/konva/1.6.3/konva.min.js"></script>
     <meta charset="utf-8">
-    <title>Konva Image Events Demo</title>
+    <title>Konva Text Demo</title>
     <style>
         body {
             margin: 0;
@@ -16,81 +17,72 @@
 <body>
 <div id="container"></div>
 <script>
-    function writeMessage(message) {
-        text.setText(message);
-        layer.draw();
-    }
-
-    function loadImages(sources, callback) {
-        var images = {};
-        var loadedImages = 0;
-        var numImages = 0;
-        for(var src in sources) {
-            numImages++;
-        }
-        for(var src in sources) {
-            images[src] = new Image();
-            images[src].onload = function() {
-                if(++loadedImages >= numImages) {
-                    callback(images);
-                }
-            };
-            images[src].src = sources[src]+ '?' + new Date().getTime();
-            images[src].setAttribute('crossOrigin', '');
-        }
-    }
-
-    function buildStage(images) {
-        var monkey = new Konva.Image({
-            image: images.monkey,
-            x: 120,
-            y: 50
-        });
-        var lion = new Konva.Image({
-            image: images.lion,
-            x: 570,
-            y: 30
-        });
-        monkey.on('mouseover', function() {
-            writeMessage('mouseover monkey');
-            lion.show();
-        });
-        monkey.on('mouseout', function() {
-            writeMessage('');
-        });
-        lion.on('mouseover', function() {
-            writeMessage('mouseover lion');
-            lion.hide();
-        });
-        lion.on('mouseout', function() {
-            writeMessage('');
-        });
-        lion.cache();
-        lion.drawHitFromCache();
-        layer.add(monkey);
-        layer.add(lion);
-        layer.add(text);
-        stage.add(layer);
-    }
     var stage = new Konva.Stage({
         container: 'container',
-        width: 768,
-        height: 200
+        width: 340,
+        height: 300
     });
     var layer = new Konva.Layer();
-    var text = new Konva.Text({
-        x: 10,
-        y: 10,
-        fontFamily: 'Calibri',
-        fontSize: 24,
-        text: '',
-        fill: 'black'
+    var simpleText1 = new Konva.Line({
+        x: 0,
+        y: 15,
+        stroke:"#000",
+        points:[0,0,30,0],
+        tension: 1
     });
-    var sources = {
-        lion: 'images/guts.png',
-        monkey: 'images/0.png'
-    };
-    loadImages(sources, buildStage);
+    var simpleText2 = new Konva.Line({
+        x: 60,
+        y: 60,
+        stroke:"#000",
+        points:[0,0,-10,-10,0,20]
+    });
+    simpleSquare  = new Konva.Rect({
+        x: 0,
+        y: 0,
+        width:30,
+        height: 30,
+        fill: "#F00"
+    });
+    // to align text in the middle of the screen, we can set the
+    // shape offset to the center of the text shape after instantiating it
+//    simpleText.setOffset({
+////        x: simpleText.getWidth() / 2
+//    });
+    // since this text is inside of a defined area, we can center it using
+    // align: 'center'
+    var complexText = new Konva.Text({
+        x: 20,
+        y: 60,
+        text: 'COMPLEX TEXT\n\nAll the world\'s a stage, and all the men and women merely players. They have their exits and their entrances.',
+        fontSize: 18,
+        fontFamily: 'Calibri',
+        fill: '#555',
+        width: 300,
+        padding: 20,
+        align: 'center'
+    });
+    var rect = new Konva.Rect({
+        x: 20,
+        y: 60,
+        stroke: '#555',
+        strokeWidth: 5,
+        fill: '#ddd',
+        width: 300,
+        height: complexText.getHeight(),
+        shadowColor: 'black',
+        shadowBlur: 10,
+        shadowOffset: [10, 10],
+        shadowOpacity: 0.2,
+        cornerRadius: 10
+    });
+    // add the shapes to the layer
+    layer.add(simpleSquare);
+    layer.add(simpleText1);
+    layer.add(simpleText2);
+//    layer.add(rect);
+//    layer.add(complexText);
+    // add the layer to the stage
+    stage.add(layer);
 </script>
 </body>
 </html>

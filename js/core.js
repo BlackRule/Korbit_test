@@ -1,47 +1,109 @@
 var resources = [
     '0.png',
-    'guts.png'
+    '1.png',
+    '2.png',
+    '3.jpg'
 ];
 var imgs = {};
 var konvaImgs = {};
-imgs.length = konvaImgs.length = 0;
-var scaleBy = 1.5;
+imgs.length = 0;
 var stage;
-
-
-function loadImages(sources, callback) {
-    var images = {};
-    var loadedImages = 0;
-    var numImages = 0;
-    for(var src in sources) {
-        numImages++;
-    }
-    for(var src in sources) {
-        images[src] = new Image();
-        images[src].onload = function() {
-            if(++loadedImages >= numImages) {
-                callback(images);
-            }
-        };
-        images[src].src = sources[src];
-    }
-}
-
-function organs() {
-
-}
-
-function main() {
-
-    [].forEach.call(resources, function (img) {
-        konvaImgs[img] = new Konva.Image({
-            image: imgs[img],
-            height: imgs[img].height,
-            width: imgs[img].width,
-            draggable: true
-        });
-        konvaImgs.length++;
+var layer;
+var currLevel = 0;
+var MAX_LVL = 3;
+var buttonWidth = 40;
+var plusButton, minusButton;
+var buttonBgColor = 'blue';
+var buttonBgDesableColor = '#000';
+var butTxtColor = "#000";
+function preload() {
+    [].forEach.call(resources, function (name) {
+        imgs[name] = new Image();
+        imgs[name].src = "images/" + name;
+        imgs.length++;
     });
+
+
+    var counter = 0;
+
+
+    [].forEach.call(resources, function (name) {
+        imgs[name].addEventListener('load', incrementCounter, false);
+    });
+
+    function incrementCounter() {
+        counter++;
+        if (counter === imgs.length) {
+            Init();
+        }
+    }
+
+}
+
+//s=1=> enable
+// 0=> disable
+function enDisAble(but, s) {
+    if (but == '+') {
+        plusButton.setListening(s);
+        plusButton.setFill(s ? buttonBgColor : buttonBgDesableColor);
+    }
+    if (but == '-') {
+        minusButton.setListening(s);
+        minusButton.setFill(s ? buttonBgColor : buttonBgDesableColor);
+    }
+    console.log("endis " + but + " " + (s ? "show" : "hide"));
+}
+
+
+function buttonsInit() {
+    plusButton = new Konva.Circle({
+        x: stage.getWidth() - buttonWidth / 2,
+        y: stage.getHeight() - buttonWidth / 2,
+        radius: buttonWidth / 2,
+        fill: buttonBgColor,
+        stroke: 'black',
+        strokeWidth: 1
+    });
+
+
+    var plusButtonText = new Konva.Line({
+        x: stage.getWidth() - buttonWidth,
+        y: stage.getHeight() - buttonWidth,
+        stroke: butTxtColor,
+        points: [0, buttonWidth / 2, buttonWidth, buttonWidth / 2, //Horizontal of +
+            buttonWidth / 2, buttonWidth / 2, //back to center
+            buttonWidth / 2, 0, buttonWidth / 2, buttonWidth //Vertical of +
+        ]
+    });
+
+    layer.add(plusButton);
+    plusButton.on("click", function () {
+        handler("+");
+    });
+    layer.add(plusButtonText);
+    minusButton = new Konva.Circle({
+        x: stage.getWidth() - buttonWidth / 2,
+        y: stage.getHeight() - buttonWidth - buttonWidth / 2,
+        radius: buttonWidth / 2,
+        fill: buttonBgColor,
+        stroke: 'black',
+        strokeWidth: 1
+    });
+    var minusButtonText = new Konva.Line({
+        x: stage.getWidth() - buttonWidth,
+        y: stage.getHeight() - buttonWidth - buttonWidth,
+        stroke: butTxtColor,
+        points: [0, buttonWidth / 2, buttonWidth, buttonWidth / 2] //Horizontal of -
+    });
+    layer.add(minusButton);
+    minusButton.on("click", function () {
+        handler("-");
+    });
+    layer.add(minusButtonText);
+}
+
+
+function Init() {
 
     var viewPort = {
         width: $(document).width(),
@@ -56,95 +118,68 @@ function main() {
 
     });
 
-    function wheelF(e) {
-        e.preventDefault();
-        var oldScale = stage.scaleX();
-        var mousePointTo = {
-            x: stage.getPointerPosition().x / oldScale - stage.x() / oldScale,
-            y: stage.getPointerPosition().y / oldScale - stage.y() / oldScale,
-        };
-        var newScale = e.deltaY < 0 ? oldScale * scaleBy : oldScale / scaleBy;
-        stage.scale({x: newScale, y: newScale});
-        var newPos = {
-            x: -(mousePointTo.x - stage.getPointerPosition().x / newScale) * newScale,
-            y: -(mousePointTo.y - stage.getPointerPosition().y / newScale) * newScale
-        };
-        stage.position(newPos);
-
-        stage.batchDraw();
-    }
-
-
-    konvaImgs['0.png'].on("mousemove", function () {
-        var mousePos = stage.getPointerPosition();
-        var x = mousePos.x - 190;
-        var y = mousePos.y - 40;
-        if (stage.getAbsoluteScale().x > 1) {
-            organs();
-        }
-
-    });
-
-    var layer = new Konva.Layer();
-    [].forEach.call(resources, function (img) {
-        layer.add(konvaImgs[img]);
-    });
+    layer = new Konva.Layer();
     stage.add(layer);
-    layer.draw();
 
-    window.addEventListener('wheel', wheelF);
-
-}
-
-function preload() {
-    [].forEach.call(resources, function (name) {
-        imgs[name] = new Image();
-        imgs[name].src = "images/" + name;
-        imgs.length++;
-    });
-
-    var len = imgs.length,
-        counter = 0;
-
-
-    [].forEach.call(resources, function (name) {
-        imgs[name].addEventListener('load', incrementCounter, false);
-    });
-
-    function incrementCounter() {
-        counter++;
-        alert("len" + len + "c" + counter);
-        if (counter === len) {
-            main();
-        }
+    for (var curr in imgs) {
+        konvaImgs[curr] = new Konva.Image({
+            image: imgs[curr],
+            height: imgs[curr].height,
+            width: imgs[curr].width,
+            draggable: false
+        });
+        layer.add(konvaImgs[curr]);
+        konvaImgs[curr].hide();
     }
 
+    buttonsInit();
+
+    enDisAble('-', 0);
+    handle(0, 1);
+
+    layer.draw();
 }
+
+//s=1=>set
+//s=0=>unset
+function handle(lvl, s) {
+    console.log("handle " + lvl + " " + (s ? "show" : "hide"));
+    var curr = lvl + '.png';
+    if (lvl == 3) curr = '3.jpg';
+    if (s) {
+        konvaImgs[curr].show();
+    } else {
+        konvaImgs[curr].hide();
+    }
+}
+
+
+function handler(s) {
+    handle(currLevel, 0);
+    if (s == '+') {
+        if (currLevel == 0) {
+            enDisAble('-', 1);
+        }
+        currLevel++;
+        if (currLevel == MAX_LVL) {
+            enDisAble('+', 0);
+        }
+    }
+    if (s == '-') {
+        if (currLevel == MAX_LVL) {
+            enDisAble('+', 1);
+        }
+        currLevel--;
+        if (currLevel == 0) {
+            enDisAble('-', 0);
+        }
+    }
+    handle(currLevel, 1);
+    layer.draw();
+}
+
 
 $(document).ready(function () {
     preload();
-    alert(1);
-
-//         layer.on('mouseenter', function () {
-//         layer.scale({
-//         x: zoomLevel,
-//         y: zoomLevel
-//         });
-//         layer.draw();
-//         });
-//         layer.on('mousemove', function (e) {
-//         var pos = stage.getPointerPosition();
-//         layer.x(-(pos.x));
-//         layer.y(-(pos.y));
-//         layer.draw();
-//         });
-//         layer.on('mouseleave', function () {
-//         layer.x(0);
-//         layer.y(0);
-//         layer.scale({
-//         x: 1,
-//         y: 1
-//         });
-//         layer.draw();
-//         });
 });
+
