@@ -1,46 +1,4 @@
-var resources = [
-    '0.png',
-    '1.png',
-    '2.png',
-    '3.jpg'
-];
-var imgs = {};
-var konvaImgs = {};
-imgs.length = 0;
-var stage;
-var layer;
-var currLevel = 0;
-var MAX_LVL = 3;
-var buttonWidth = 40;
-var plusButton, minusButton;
-var buttonBgColor = 'blue';
-var buttonBgDesableColor = '#000';
-var butTxtColor = "#000";
-var animationDuration = 2;
 
-var scaleFactor;
-var initial= {
-
-    '0.png': {
-        x:0,
-        y:0,
-        scale: 1,
-        opacity: 1
-    },
-    '1.png': {
-        scale: 0.55/3,
-        x:459,
-        y:842,
-        opacity: 0
-    },
-    '2.png': {
-        opacity: 0
-    },
-    '3.jpg': {
-        opacity: 0
-    }
-
-};
 
 function preload() {
     [].forEach.call(resources, function (name) {
@@ -173,17 +131,7 @@ function Init() {
 //dir 1 +
 //0 -
 function handle(lvl) {
-    var visibility=[
-        {'0.png':1},
-        {'0.png':1},
-        {'0.png':1,'1.png':1}
-    ]
-    var views=[
-        {scale:1,x:0,y:0},
-        {scale:1.5,x:0,y:-156},
-        {scale:3,x:0,y:-456},
-        {scale:6}
-    ];
+
     for(var curr in konvaImgs) {
 
             var tmpObj = {
@@ -191,8 +139,8 @@ function handle(lvl) {
                 easing: Konva.Easings.EaseOut,
                 scaleX: initial[curr].scale*scaleFactor*views[lvl].scale,
                 scaleY: initial[curr].scale*scaleFactor*views[lvl].scale,
-                x: (initial[curr].x)*scaleFactor*initial[curr].scale*views[lvl].scale+views[lvl].x,
-                y: (initial[curr].y)*scaleFactor*initial[curr].scale*views[lvl].scale+views[lvl].y,
+                x: (initial[curr].x)*scaleFactor*initial[curr].scale*views[lvl].scale+views[lvl].x*scaleFactor,
+                y: (initial[curr].y)*scaleFactor*initial[curr].scale*views[lvl].scale+views[lvl].y*scaleFactor,
                 duration: animationDuration,
                 opacity: visibility[lvl].hasOwnProperty(curr)?1:0
             };
