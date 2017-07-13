@@ -12,7 +12,7 @@ var stage;
 var layer;
 var currLevel = 0;
 var MAX_LVL = 6;
-var buttonWidth = 40;
+var buttonWidth = 80;
 var plusButton, minusButton;
 var buttonBgColor = 'blue';
 var buttonBgDesableColor = '#000';
