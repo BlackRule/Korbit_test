@@ -22,12 +22,15 @@ var scaleFactor;
 var initial= {
 
     '0.png': {
-        scaleX: 1,
-        scaleY: 1,
+        x:0,
+        y:0,
+        scale: 1,
         opacity: 1
     },
     '1.png': {
-
+        scale: 0.55/3,
+        x:459,
+        y:842,
         opacity: 0
     },
     '2.png': {
@@ -127,7 +130,7 @@ function buttonsInit() {
 
 
 function Init() {
-
+    scaleFactor =  Math.min($(document).width() / imgs['0.png'].width, $(document).height() / imgs['0.png'].height);
     stage = new Konva.Stage({
         container: 'container',
         height: $(document).height(),
@@ -140,21 +143,28 @@ function Init() {
 
     for (var curr in imgs) {
         if (curr == 'length') continue;
-        konvaImgs[curr] = new Konva.Image({
+        var obj={
             image: imgs[curr],
             height: imgs[curr].height,
             width: imgs[curr].width,
+            scaleX: initial[curr].scale*scaleFactor,
+            scaleY:  initial[curr].scale*scaleFactor,
+            x: initial[curr].x*scaleFactor*initial[curr].scale,
+            y: initial[curr].y*scaleFactor*initial[curr].scale,
+            opacity:initial[curr].opacity,
             draggable: false
-        });
-
+        };
+        console.log(obj);
+        console.log(initial['1.png'].scale*scaleFactor);
+        konvaImgs[curr] = new Konva.Image(obj);
+        // konvaImgs[curr].scale({x:4*scaleFactor*initial[curr].scale,y:4*scaleFactor*initial[curr].scale});
         layer.add(konvaImgs[curr]);
-        konvaImgs[curr].setOpacity(0);
     }
-   scaleFactor =  Math.min($(document).width() / imgs['0.png'].width, $(document).height() / imgs['0.png'].height);
+
     buttonsInit();
 
     enDisAble('-', 0);
-    handle(0);
+    // handle(0);
     layer.draw();
 }
 
@@ -163,109 +173,33 @@ function Init() {
 //dir 1 +
 //0 -
 function handle(lvl) {
-
-
-    var zoomTable = [ //Scripted levels table
-        { //level 0 00
-            '0.png': {
-                scaleX: 1,
-                scaleY: 1,
-                opacity: 1
-            },
-            '1.png': {
-                opacity: 0
-            },
-            '2.png': {
-                opacity: 0
-            },
-            '3.jpg': {
-                opacity: 0
-            }
-        },
-        { //level 1 01
-            '0.png': {
-                scaleX: 1.5 ,
-                scaleY: 1.5 ,
-                y: -235 ,
-                visible: 1
-            },
-            '1.png': {
-                opacity: 0
-            },
-            '2.png': {
-                opacity: 0
-            },
-            '3.jpg': {
-                opacity: 0
-            }
-        },
-        { //level 2 10
-            pre: function () {
-                konvaImgs['1.png'].setX(129* scaleFactor).setY(-2* scaleFactor).scale({x: 0.27 * scaleFactor, y: 0.27 * scaleFactor});
-                konvaImgs['1.png'].setOpacity(1);
-                console.log('pre');
-            },
-            unpre: function () {
-                konvaImgs['1.png'].setOpacity(0);
-                console.log('unpre');
-            },
-            '0.png': {
-                scaleX: 3 ,
-                scaleY: 3 ,
-                y: -470 ,
-                opacity: 1
-            },
-            '1.png': {
-                scaleX: 0.51,
-                scaleY: 0.51,
-                x: 257 ,
-                y: -7 ,
-                opacity: 1
-            },
-            '2.png': {
-                opacity: 0
-            },
-            '3.jpg': {
-                opacity: 0
-            }
-        },
-        { //level 3 11
-            '0.png': {
-                scaleX: 6,
-                scaleY: 6,
-                y: -917
-            },
-            '1.png': {
-                scaleX: 1,
-                scaleY: 1,
-                x: 518,
-                y: -3
-            }
-        }
+    var visibility=[
+        {'0.png':1},
+        {'0.png':1},
+        {'0.png':1,'1.png':1}
+    ]
+    var views=[
+        {scale:1,x:0,y:0},
+        {scale:1.5,x:0,y:-156},
+        {scale:3,x:0,y:-456},
+        {scale:6}
     ];
-    // if (zoomTable[lvl]['pre']) {
-    //
-    //     zoomTable[lvl]['pre']();
-    // }
-    // if (zoomTable[lvl+1]&&zoomTable[lvl+1]['unpre']) {
-    //
-    //     zoomTable[lvl]['unpre']();
-    // }
-    for (var curr in zoomTable[lvl]) {
+    for(var curr in konvaImgs) {
+
             var tmpObj = {
-            node: konvaImgs[curr],
-            easing: Konva.Easings.EaseOut,
-            duration: animationDuration
-        };
-        if (curr == 'pre'||curr == 'unpre') {
-            continue;
-        }
-        for (var attrname in zoomTable[lvl][curr]) {
-            tmpObj[attrname] = zoomTable[lvl][curr][attrname];
-            if (attrname != 'opacity') tmpObj[attrname] *= scaleFactor;
-        }
-        konvaImgs[curr].tween = new Konva.Tween(tmpObj);
-        konvaImgs[curr].tween.play();
+                node: konvaImgs[curr],
+                easing: Konva.Easings.EaseOut,
+                scaleX: initial[curr].scale*scaleFactor*views[lvl].scale,
+                scaleY: initial[curr].scale*scaleFactor*views[lvl].scale,
+                x: (initial[curr].x)*scaleFactor*initial[curr].scale*views[lvl].scale+views[lvl].x,
+                y: (initial[curr].y)*scaleFactor*initial[curr].scale*views[lvl].scale+views[lvl].y,
+                duration: animationDuration,
+                opacity: visibility[lvl].hasOwnProperty(curr)?1:0
+            };
+
+            konvaImgs[curr].tween = new Konva.Tween(tmpObj);
+            konvaImgs[curr].tween.play();
+
     }
 
     console.log("handle " + lvl);
