@@ -69,11 +69,15 @@ function buttonsInit() {
         points: [0, buttonWidth / 2, buttonWidth, buttonWidth / 2, //Horizontal of +
             buttonWidth / 2, buttonWidth / 2, //back to center
             buttonWidth / 2, 0, buttonWidth / 2, buttonWidth //Vertical of +
-        ]
+        ],
+        listening: false
     });
 
     layer.add(plusButton);
     plusButton.on("click", function () {
+        handler("+");
+    });
+    plusButton.on("tap", function () {
         handler("+");
     });
     layer.add(plusButtonText);
@@ -89,10 +93,14 @@ function buttonsInit() {
         x: stage.getWidth() - buttonWidth,
         y: stage.getHeight() - buttonWidth - buttonWidth,
         stroke: butTxtColor,
-        points: [0, buttonWidth / 2, buttonWidth, buttonWidth / 2] //Horizontal of -
+        points: [0, buttonWidth / 2, buttonWidth, buttonWidth / 2], //Horizontal of -
+        listening: false
     });
     layer.add(minusButton);
     minusButton.on("click", function () {
+        handler("-");
+    });
+    minusButton.on("tap", function () {
         handler("-");
     });
     layer.add(minusButtonText);
@@ -108,10 +116,14 @@ function buttonsInit() {
         x: stage.getWidth() - buttonWidth,
         y: stage.getHeight() - buttonWidth - 2*buttonWidth,
         stroke: butTxtColor,
-        points: [0, 0, buttonWidth, buttonWidth] // slash
+        points: [0, 0, buttonWidth, buttonWidth], // slash
+        listening: false
     });
     layer.add(changeButton);
     changeButton.on("click", function () {
+        changeSkin();
+    });
+    changeButton.on("tap", function () {
         changeSkin();
     });
     layer.add(changeButtonText);
