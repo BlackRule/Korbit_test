@@ -1,5 +1,6 @@
 var resources = [
     '0.png',
+    '01.png',
     '1.png',
     '2.png',
     '3.jpg'
@@ -17,11 +18,18 @@ var buttonBgColor = 'blue';
 var buttonBgDesableColor = '#000';
 var butTxtColor = "#000";
 var animationDuration = 2;
+var currSkin=0;
 
 var scaleFactor;
 var initial = {
 
     '0.png': {
+        x: 0,
+        y: 0,
+        scale: 1,
+        opacity: 1
+    },
+    '01.png': {
         x: 0,
         y: 0,
         scale: 1,
@@ -40,9 +48,9 @@ var initial = {
         opacity: 0
     },
     '3.jpg': {
-        scale: 0.0778,
-        x: 1125,
-        y: 2060,
+        scale: 0.0489,
+        x: 1948,
+        y: 3500,
         opacity: 0
     }
 
@@ -79,12 +87,12 @@ var views = [
         x: -1000,
         y: -2270
     },
-    {scale: 28, // 5
-        x: -2900,
-        y: -4750
+    {scale: 30, // 5
+        x: -2980,
+        y: -5100
     },
-    {scale: 56, // 6
-        x: -5200,
-        y: -9500
+    {scale: 60, // 6
+        x: -6200,
+        y: -10500
     }
 ];

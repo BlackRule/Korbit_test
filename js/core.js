@@ -39,6 +39,18 @@ function enDisAble(but, s) {
 }
 
 
+function changeSkin() {
+    if(currSkin==0){
+        currSkin =1;
+        konvaImgs['0.png'].setImage(imgs['01.png']);
+        konvaImgs['0.png'].getLayer().draw();
+    } else{
+        currSkin=0;
+        konvaImgs['0.png'].setImage(imgs['0.png']);
+        konvaImgs['0.png'].getLayer().draw();
+    }
+}
+
 function buttonsInit() {
     plusButton = new Konva.Circle({
         x: stage.getWidth() - buttonWidth / 2,
@@ -84,6 +96,25 @@ function buttonsInit() {
         handler("-");
     });
     layer.add(minusButtonText);
+    var changeButton = new Konva.Circle({
+        x: stage.getWidth() - buttonWidth / 2,
+        y: stage.getHeight() - 2*buttonWidth - buttonWidth / 2,
+        radius: buttonWidth / 2,
+        fill: buttonBgColor,
+        stroke: 'black',
+        strokeWidth: 1
+    });
+    var changeButtonText = new Konva.Line({
+        x: stage.getWidth() - buttonWidth,
+        y: stage.getHeight() - buttonWidth - 2*buttonWidth,
+        stroke: butTxtColor,
+        points: [0, 0, buttonWidth, buttonWidth] // slash
+    });
+    layer.add(changeButton);
+    changeButton.on("click", function () {
+        changeSkin();
+    });
+    layer.add(changeButtonText);
 }
 
 
@@ -100,7 +131,7 @@ function Init() {
     stage.add(layer);
 
     for (var curr in imgs) {
-        if (curr == 'length') continue;
+        if (curr == 'length'||curr=='01.png') continue;
         var obj={
             image: imgs[curr],
             height: imgs[curr].height,
