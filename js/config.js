@@ -1,3 +1,6 @@
+// console.log = function () {
+// };
+var scaleBy = 1.5;
 var resources = [
     '0.png',
     '01.png',
@@ -18,7 +21,7 @@ var buttonBgColor = 'blue';
 var buttonBgDesableColor = '#000';
 var butTxtColor = "#000";
 var animationDuration = 2;
-var currSkin=0;
+var currSkin = 0;
 
 var scaleFactor;
 var initial = {
@@ -66,32 +69,48 @@ var visibility = [
     {'2.png': 1, '3.jpg': 1} //6
 ];
 
+//texture: min zomm at which it's visible
+var load = {
+    '0.png': 0,
+    '01.png': 0,
+    '1.png': 2,
+    '2.png': 8,
+    '3.jpg': 20
+};
+
 var views = [
-    {scale: 1, //0
+    {
+        scale: 1, //0
         x: 0,
         y: 0
     },
-    {scale: 1.5, //1
+    {
+        scale: 1.5, //1
         x: 0,
         y: -156
     },
-    {scale: 3, //2
+    {
+        scale: 3, //2
         x: 0,
         y: -456
     },
-    {scale: 6, //3
+    {
+        scale: 6, //3
         x: -100,
         y: -956
     },
-    {scale: 14, //4
+    {
+        scale: 14, //4
         x: -1000,
         y: -2270
     },
-    {scale: 30, // 5
+    {
+        scale: 30, // 5
         x: -2980,
         y: -5100
     },
-    {scale: 60, // 6
+    {
+        scale: 60, // 6
         x: -6200,
         y: -10500
     }
